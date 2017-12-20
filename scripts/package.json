@@ -1,0 +1,16 @@
+{
+  "name": "scripts",
+  "version": "1.0.0",
+  "description": "",
+  "main": "cities.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "author": "",
+  "license": "ISC",
+  "dependencies": {
+    "bson-ext": "^1.0.5",
+    "kerberos": "0.0.23",
+    "mongodb": "^3.0.0-rc0"
+  }
+}
