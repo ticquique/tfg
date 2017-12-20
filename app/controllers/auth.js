@@ -29,13 +29,13 @@ const genToken = (user) => {
 
 const _login = async (req, res) => {
     try {
-        req.checkBody("email", "Invalid email").notEmpty();
+        req.checkBody("username", "Invalid username").notEmpty();
         req.checkBody("password", "Invalid password").notEmpty();
 
         let errors = req.validationErrors();
         if (errors) throw errors;
 
-        let user = await User.findOne({ "email": req.body.email }).exec();
+        let user = await User.findOne({ "username": req.body.username }).exec();
 
         if (user === null) throw "User not found";
 
@@ -53,12 +53,12 @@ const _login = async (req, res) => {
 const getStrategy = () => {
     const params = {
         secretOrKey: config.get('JWT_SECRET'),
-        jwtFromRequest: ExtractJwt.fromAuthHeaderAsBearerToken,
+        jwtFromRequest: ExtractJwt.fromAuthHeaderWithScheme('jwt'),
         passReqToCallback: true
     };
 
     return new Strategy(params, (req, payload, done) => {
-        User.findOne({ "email": payload.email }, (err, user) => {
+        User.findOne({ "username": payload.username }, (err, user) => {
             if (err) {
                 return done(err);
             }

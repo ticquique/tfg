@@ -130,14 +130,6 @@ const _listUsersFR = function (req, res, callback) {
     })
 }
 
-const _authUser = function (req, res, callback) {
-
-}
-
-const _getProfile = function (req, res, callback) {
-    
-}
-
 
 module.exports.getUser = _getUser;
 module.exports.getUserFR = _getUserFR;
@@ -149,5 +141,3 @@ module.exports.deleteUser = _deleteUser;
 module.exports.deleteUserFR = _deleteUserFR;
 module.exports.listUsers = _listUsers;
 module.exports.listUsersFR = _listUsersFR;
-module.exports.getProfile = _getProfile;
-module.exports.authUser = _authUser;

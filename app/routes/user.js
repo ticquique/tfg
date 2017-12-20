@@ -13,8 +13,5 @@ module.exports = function (router) {
         .get(userController.listUsersFR)
         .post(userController.newUserFR);
 
-    router.route('/authenticate')
-        .post(userController.authUser)
-        .get(userController.getProfile);
 
 };
