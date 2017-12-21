@@ -27,10 +27,10 @@ const insertDocuments = function (db, result, callback) {
     // Get the documents collection
     const collection = db.collection('countries');
     // Insert some documents
-    collection.insertMany(result, function (err, result) {
-        console.log("Inserted " + result.ops.length + " documents into the collection");
-        callback(result);
-    });
+    // collection.insertMany(result, function (err, result) {
+    //     console.log("Inserted " + result.ops.length + " documents into the collection");
+    //     callback(result);
+    // });
 }
 
 function extractCountries(callback) {
