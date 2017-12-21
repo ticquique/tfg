@@ -1,6 +1,6 @@
 {
     "database":"mongodb://ailez:RaFlKQWwv9NwZX5A@cluster0-shard-00-00-gr7ru.mongodb.net:27017,cluster0-shard-00-01-gr7ru.mongodb.net:27017,cluster0-shard-00-02-gr7ru.mongodb.net:27017/inarts?ssl=true&replicaSet=Cluster0-shard-0&authSource=admin",
-    "url":"inarts.com",
+    "url":"localhost",
     "whitelist":{
         "inarts":"localhost"
     }

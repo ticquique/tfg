@@ -19,7 +19,6 @@ var favicon = require('serve-favicon');
 var cookieParser = require('cookie-parser');
 var https = require('https');
 var cors = require('cors');
-var auth = require("../../app/controllers/auth");
 var app;
 
 var start = function (cb) {
@@ -29,9 +28,11 @@ var start = function (cb) {
         key: fs.readFileSync(path.join(config.get('PWD'), config.get('NODE_SSL_KEY'))),
         cert: fs.readFileSync(path.join(config.get('PWD'), config.get('NODE_SSL_CERT')))
     };
+
+    var auth = require("../../app/controllers/auth");
     var corsOptions = {
         origin: function (origin, callback) {
-            if(config.get('whitelist').origin !== -1) {
+            if (config.get('whitelist').origin !== -1) {
                 callback(null, true);
             } else {
                 callback(new Error('Not allowed'));
@@ -55,25 +56,7 @@ var start = function (cb) {
             }
         }
     }));
-    app.use(auth.initialize());
-    
-    app.all('*', (req, res, next) => {
-        if (req.path.includes("/api/auth")) return next();
 
-        return auth.authenticate((err, user, info) => {
-            if (err) { return next(err); }
-            if (!user) {
-                if (info.name === "TokenExpiredError") {
-                    return res.status(401).json({ message: "Your token has expired. Please generate a new one" });
-                } else {
-                    return res.status(401).json({ message: info.message });
-                }
-            }
-            app.set("user", user);
-            return next();
-        })(req, res, next);
-
-    });
 
     logger.info('[SERVER] Initializing routes');
     require('../../app/routes/index')(app);

@@ -1,5 +1,6 @@
 
 var userController = require('../controllers/users');
+var auth = require('../controllers/auth');
 
 module.exports = function (router) {
     'use strict';
