@@ -1,5 +1,6 @@
 const MongoClient = require('mongodb').MongoClient;
 const assert = require('assert');
+var cities = require('./files/countryCities.json');
 
 // Connection URL
 const url = "mongodb://ailez:RaFlKQWwv9NwZX5A@cluster0-shard-00-00-gr7ru.mongodb.net:27017,cluster0-shard-00-01-gr7ru.mongodb.net:27017,cluster0-shard-00-02-gr7ru.mongodb.net:27017/inarts?ssl=true&replicaSet=Cluster0-shard-0&authSource=admin";
@@ -27,10 +28,10 @@ const insertDocuments = function (db, result, callback) {
     // Get the documents collection
     const collection = db.collection('countries');
     // Insert some documents
-    // collection.insertMany(result, function (err, result) {
-    //     console.log("Inserted " + result.ops.length + " documents into the collection");
-    //     callback(result);
-    // });
+    collection.insertMany(result, function (err, result) {
+        console.log("Inserted " + result.ops.length + " documents into the collection");
+        callback(result);
+    });
 }
 
 function extractCountries(callback) {
@@ -48,6 +49,11 @@ function extractCountries(callback) {
             const country = {
                 "iso": iso,
                 "name": name
+            }
+            if(cities.countries[name] && cities.countries[name][0] !== undefined){
+                country.cities = cities.countries[name];
+            } else {
+                country.cities = [];
             }
             console.log(country);
             countries.push(country);

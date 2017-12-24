@@ -1150,7 +1150,7 @@
             "Märäzä",
             "Gädäbäy"
         ],
-        "Bahamas": [
+        "Bahamas, The": [
             "Nassau",
             "Freeport",
             "Albert Town",
@@ -1734,7 +1734,7 @@
             "Mongar",
             "Shemgang"
         ],
-        "Bolivia, Plurinational State of": [
+        "Bolivia": [
             "La Paz",
             "Santa Cruz",
             "Cochabamba",
@@ -2391,7 +2391,7 @@
             "Diadema"
         ],
         "British Indian Ocean Territory": [],
-        "Brunei Darussalam": [
+        "Brunei": [
             "Bandar Seri Begawan",
             "Kuala Belait",
             "Seria",
@@ -3660,7 +3660,7 @@
             "Loandjili",
             "Sibiti"
         ],
-        "Congo, the Democratic Republic of the": [
+        "Congo, Democratic Republic of the": [
             "Kinshasa",
             "Lubumbashi",
             "Bukavu",
@@ -3891,7 +3891,7 @@
             "Coco",
             "Brasilito"
         ],
-        "Côte d'Ivoire": [
+        "Cote dIvoire": [
             "Abidjan",
             "Abengourou",
             "Bouaké",
@@ -5501,7 +5501,7 @@
             "Ankober",
             "Addi Ark'ay"
         ],
-        "Falkland Islands (Malvinas)": [
+        "Falkland Islands (Islas Malvinas)": [
             "Goose Green",
             "Port Stanley",
             "Grytviken",
@@ -6030,7 +6030,7 @@
             "Médouneu",
             "Kango"
         ],
-        "Gambia": [
+        "Gambia, The": [
             "Banjul",
             "Serekunda",
             "al-Gharbiyah",
@@ -7142,8 +7142,8 @@
             "Kenscoff",
             "Dérac"
         ],
-        "Heard Island and McDonald Mcdonald Islands": [],
-        "Holy See (Vatican City State)": [
+        "Heard Island and McDonald Islands": [],
+        "Holy See (Vatican City)": [
             "Vatican"
         ],
         "Honduras": [
@@ -8049,7 +8049,7 @@
             "Payakumbuh",
             "Tanjung Pandan"
         ],
-        "Iran, Islamic Republic of": [
+        "Iran": [
             "Tehran",
             "Esfahan",
             "Karaj",
@@ -9436,7 +9436,7 @@
             "Roreti",
             "Takaeang"
         ],
-        "Korea, Democratic People's Republic of": [
+        "Korea, North": [
             "Pyeongyang",
             "Cheongjin",
             "Phyeongseong",
@@ -9453,7 +9453,7 @@
             "Seongnim",
             "Najin"
         ],
-        "Korea, Republic of": [
+        "Korea, South": [
             "Seoul",
             "Pusan",
             "Incheon",
@@ -10246,11 +10246,11 @@
             "Breinert",
             "Heiderscheid-Fond"
         ],
-        "Macao": [
+        "Macau": [
             "Macau",
             "Macao"
         ],
-        "Macedonia, the Former Yugoslav Republic of": [
+        "The Former Yugoslav Republic of Macedonia": [
             "Skopje",
             "Arachinovo",
             "Ohrid",
@@ -13709,7 +13709,7 @@
             "Palayan",
             "Pulupandan"
         ],
-        "Pitcairn": [],
+        "Pitcairn Islands": [],
         "Poland": [
             "Warsaw",
             "Poznan",
@@ -14358,7 +14358,7 @@
             "Potcoava",
             "Köln"
         ],
-        "Russian Federation": [
+        "Russia": [
             "Moscow",
             "St. Petersburg",
             "Abakan",
@@ -14575,7 +14575,7 @@
             "Gikongoro"
         ],
         "Saint Barthélemy": [],
-        "Saint Helena, Ascension and Tristan da Cunha": [
+        "Saint Helena": [
             "Edinburgh",
             "Holetown",
             "Georgetown"
@@ -14613,7 +14613,7 @@
             "Laborie",
             "Choc"
         ],
-        "Saint Martin (French part)": [],
+        "Saint Martin": [],
         "Saint Pierre and Miquelon": [
             "Saint-Pierre",
             "Miquelon"
@@ -14782,7 +14782,7 @@
             "Semmé",
             "Golléré"
         ],
-        "Serbia": [
+        "Serbia and Montenegro": [
             "Beograd",
             "Novi Sad",
             "Niš",
@@ -14885,7 +14885,7 @@
         "Singapore": [
             "Singapore"
         ],
-        "Sint Maarten (Dutch part)": [],
+        "South Georgia and the Islands": [],
         "Slovakia": [
             "Bratislava",
             "Košice",
@@ -15837,7 +15837,7 @@
             "Ellisras",
             "Totness"
         ],
-        "Svalbard and Jan Mayen": [
+        "Svalbard": [
             "Longyearbyen",
             "Barentsburg",
             "Ny-Ålesund",
@@ -16232,7 +16232,7 @@
             "Ra's-al-´Ayn",
             "al-Qutayfah"
         ],
-        "Taiwan, Province of China": [
+        "Taiwan": [
             "Taipei",
             "Taichung",
             "Hsinchu",
@@ -16817,7 +16817,7 @@
             "Hangdong",
             "Sanpatong"
         ],
-        "Timor-Leste": [],
+        "East Timor": [],
         "Togo": [
             "Lomé",
             "Agbélouvé",
@@ -18225,7 +18225,7 @@
             "Longana",
             "Port Olry"
         ],
-        "Venezuela, Bolivarian Republic of": [
+        "Venezuela": [
             "Caracas",
             "Maracaibo",
             "Acarigua",
@@ -18334,7 +18334,7 @@
             "Amatlán",
             "Guacara"
         ],
-        "Viet Nam": [
+        "Vietnam": [
             "Thanh Pho Ho Chi Minh",
             "Ha Noi",
             "Bac Can",
@@ -18404,7 +18404,7 @@
             "Son La",
             "Vinh Yen"
         ],
-        "Virgin Islands, British": [
+        "British Virgin Islands": [
             "East End-Long Look",
             "Road Town",
             "West End",
@@ -18412,7 +18412,7 @@
             "Spanish Town",
             "Settlement"
         ],
-        "Virgin Islands, U.S.": [],
+        "Virgin Islands (US)": [],
         "Wallis and Futuna": [
             "Mata'Utu"
         ],

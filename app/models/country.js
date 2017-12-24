@@ -22,11 +22,16 @@ const Country = module.exports = mongoose.model('Country', CountrySchema);
 
 
 const _getCountryByName = function (countryName, callback) {
-    Country.findOne({name: countryName}, 'name', callback);
+    return Country.findOne({name: countryName}, 'name', callback);
 }
 
 const _getCountryById = function (id, callback) {
-    Country.findById(id, 'name', callback);
+    return Country.findById(id, 'name', callback);
+}
+
+const _getCountryCities = function (id, callback) {
+    console.log("aaa");
+    return Country.findById(id, 'cities', callback);
 }
 
 const _getAllCountries = function (callback) {
@@ -36,3 +41,4 @@ const _getAllCountries = function (callback) {
 module.exports.getAllCountries = _getAllCountries;
 module.exports.getCountryByName = _getCountryByName;
 module.exports.getCountryById = _getCountryById;
+module.exports.getCountryCities = _getCountryCities;

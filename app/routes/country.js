@@ -7,6 +7,9 @@ module.exports = function (router) {
     router.route('/:countryId')
         .get(countriesController.getCountryFR);
 
+    router.route('/:countryId/cities')
+        .get(countriesController.getCountryCitiesFR);
+
     router.route('/')
         .get(countriesController.listCountriesFR);
 };

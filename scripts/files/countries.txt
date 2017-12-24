@@ -117,7 +117,7 @@ IP	-	-	Clipperton Island
 IR	IR	.ir	Iran
 IS	IL	.il	Israel
 IT	IT	.it	Italy
-IV	CI	.ci	Cote d'Ivoire
+IV	CI	.ci	Cote dIvoire
 IZ	IQ	.iq	Iraq
 JA	JP	.jp	Japan
 JE	JE	.je	Jersey
