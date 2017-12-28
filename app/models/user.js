@@ -14,7 +14,7 @@ const UserSchema = mongoose.Schema({
     type: String, required: true
   },
   password: {
-    type: String, required: true
+    type: String, required: true, minlength: 7, maxlength: 80
   },
   posts: {
     type: [{ type: Schema.Types.ObjectId, required: false }]
@@ -24,6 +24,11 @@ const UserSchema = mongoose.Schema({
   },
   numComments: {
     type: Number, default: 0, required: false
+  },
+  privileges: {
+    type: String,
+    enum: ['Member', 'Client', 'Owner', 'Admin'],
+    default: 'Member'
   },
   profile: {
     city: { type: String, required: false },

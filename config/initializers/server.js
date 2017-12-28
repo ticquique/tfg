@@ -59,6 +59,12 @@ var start = function (cb) {
 
 
     logger.info('[SERVER] Initializing routes');
+    app.all('*', (req, res, next) => {
+        console.log(req.path);
+        if ( req.url == '/api/auth') return next();
+        else {auth.authenticate(req, res, next);}
+
+    });
     require('../../app/routes/index')(app);
 
     app.use(express.static(path.join(__dirname, 'public')));

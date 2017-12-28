@@ -26,7 +26,7 @@ let email = new Email({
     },
     // uncomment below to send emails in development/test env:
     send: true,
-    preview: true,
+    preview: false,
     transport: transport
 });
 
