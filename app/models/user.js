@@ -17,11 +17,18 @@ const UserSchema = mongoose.Schema({
     type: String, required: true, minlength: 7, maxlength: 80
   },
   posts: {
-    type: [{ type: Schema.Types.ObjectId, required: false }]
+    type: [{ type: Schema.Types.ObjectId, required: false, ref: 'Post' }]
   },
-  likes: {
-    type: [{ type: Schema.Types.ObjectId, required: false }]
-  },
+  likes: [{
+    type: Schema.Types.ObjectId  ,
+    required: false, 
+    ref: 'Like'
+  }],
+  dislikes: [{
+    type: Schema.Types.ObjectId,
+    required: false,
+    ref: 'Dislike' 
+  }],
   numComments: {
     type: Number, default: 0, required: false
   },

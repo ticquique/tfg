@@ -1,6 +1,6 @@
 const options = (vars) => {
     return {
-        "template": "confirmMail",
+        "template": "checkMailWelcome",
         "message": {
             "to": vars.to
         },

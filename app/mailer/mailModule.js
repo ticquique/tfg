@@ -72,3 +72,4 @@ const mailFR = (req, res) => {
 
 
 module.exports.mailFR = mailFR;
+module.exports.mail = mail;

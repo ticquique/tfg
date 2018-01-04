@@ -30,7 +30,6 @@ const _getCountryById = function (id, callback) {
 }
 
 const _getCountryCities = function (id, callback) {
-    console.log("aaa");
     return Country.findById(id, 'cities', callback);
 }
 
