@@ -1,4 +1,6 @@
 // Country Schema
+const mongoose = require('mongoose');
+
 const AttachmentSchema = mongoose.Schema({
     url: {
         type: String,

@@ -1,3 +1,4 @@
+
 const mongoose = require('mongoose');
 const bcrypt = require('bcryptjs');
 const Schema = mongoose.Schema;
@@ -74,13 +75,8 @@ UserSchema.methods.comparePassword = function (candidatePassword) {
 
 const User = module.exports = mongoose.model('User', UserSchema);
 
-const _addUser = function (newUser, callback) {
-  newUser.save(callback);
-}
-module.exports.getUserById = function (id, callback) {
-  User.findById(id, callback);
-}
 const _updateUser = function (id, query, callback) {
+  
   if (query.password) {
     bcrypt.genSalt(10, (err, salt) => {
       bcrypt.hash(query.password, salt, (err, hash) => {
@@ -92,9 +88,6 @@ const _updateUser = function (id, query, callback) {
   } else {
     User.findByIdAndUpdate(id, { $set: query }, callback);
   }
-}
-const _deleteUser = function (id, callback) {
-  User.findByIdAndRemove({ _id: id }, callback);
 }
 
 
@@ -111,6 +104,4 @@ const _comparePassword = function (candidatePassword, hash, callback) {
 
 module.exports.comparePassword = _comparePassword;
 module.exports.getAllUsers = _getAllUsers;
-module.exports.deleteUser = _deleteUser;
 module.exports.updateUser = _updateUser;
-module.exports.addUser = _addUser;

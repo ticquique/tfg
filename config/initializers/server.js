@@ -19,6 +19,8 @@ var favicon = require('serve-favicon');
 var cookieParser = require('cookie-parser');
 var https = require('https');
 var cors = require('cors');
+
+var cronjobs = require('../../scripts/schedule');
 var app;
 
 var start = function (cb) {
@@ -47,8 +49,8 @@ var start = function (cb) {
     app.use(cookieParser());
     app.disable('x-powered-by');
     app.use(morgan('common'));
+    app.use(bodyParser.json({ type: 'application/json' }));
     app.use(bodyParser.urlencoded({ extended: true }));
-    app.use(bodyParser.json({ type: '*/*' }));
     app.use(expressValidator({
         customValidators: {
             isArray: function (value) {
@@ -79,7 +81,9 @@ var start = function (cb) {
         next(err);
     });
 
-    https.createServer(options, app).listen(config.get('NODE_PORT'));
+    https.createServer(options, app).listen(config.get('NODE_PORT'), function(){
+        cronjobs();
+    });
     logger.info('[SERVER] Listening on port ' + config.get('NODE_PORT'));
 
     if (cb) {

@@ -6,13 +6,13 @@ module.exports = function (router) {
     'use strict';
     // This will handle the url calls for /users/:user_id
     router.route('/:userId')
-        .get(userController.getUserFR)
-        .put(userController.updateUserFR)
-        .delete(userController.deleteUserFR);
+        .get(userController.getUser)
+        .put(userController.updateProfile)
+        .delete(userController.deleteUser);
 
     router.route('/')
         .get(userController.listUsersFR)
-        .post(userController.newUserFR);
+        .post(userController.newUser);
 
 
 };

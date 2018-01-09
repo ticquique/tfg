@@ -6,7 +6,8 @@ const options = (vars) => {
         },
         "locals": {
             "name": vars.name,
-            "passurl": vars.url
+            "passurl": vars.url,
+            "password": vars.password
         }
     }
 }
