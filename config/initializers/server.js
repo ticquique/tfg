@@ -61,6 +61,7 @@ var start = function (cb) {
 
 
     logger.info('[SERVER] Initializing routes');
+
     app.all('*', (req, res, next) => {
         console.log(req.path);
         if ( req.url.startsWith('/api/auth') ) return next();

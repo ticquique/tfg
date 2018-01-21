@@ -11,7 +11,7 @@ module.exports = function (router) {
         .delete(userController.deleteUser);
 
     router.route('/')
-        .get(userController.listUsersFR)
+        .get(userController.listUsers)
         .post(userController.newUser);
 
 

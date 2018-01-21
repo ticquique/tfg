@@ -44,7 +44,7 @@ const _upload = (req, res, next) => {
             res.status(401).json({ message: err });
         } else {
             const attachment = new Attachment({
-                url: path.join(pathUser, req.file.filename),
+                url: req.file.path,
                 type: "Image"
             });
             attachment.save(function (err) {

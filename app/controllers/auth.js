@@ -11,6 +11,29 @@ const _authenticate = expressJwt({
     secret: config.get('JWT_SECRET'),
 });
 
+const _isAuthenticated = async (req, res, next) => {
+    try {
+        var decoded = jwt.verify(req.headers.authorization.substr(7), config.get('JWT_SECRET'));
+        if(decoded) {
+            res.status(200).json({success: true, message: "Valid token"});
+            next()
+        } else throw err;
+    } catch (err) {
+        res.status(401).json({success: false, message: "Invalid token", err: err});
+        next()
+    }
+}
+
+const randomPassword = (length) => {
+    chars = "abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ1234567890";
+    pass = "";
+    for (x = 0; x < length; x++) {
+        i = Math.floor(Math.random() * 62);
+        pass += chars.charAt(i);
+    }
+    return pass;
+}
+
 const genToken = (user) => {
     let expires = 60 * 60 * 24 * 7;
     let token = jwt.sign({
@@ -40,16 +63,6 @@ const _register = async (req, res, next) => {
         let errors = req.validationErrors();
         if (errors) throw errors;
         let valErrors = "";
-
-        function randomPassword(length) {
-            chars = "abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ1234567890";
-            pass = "";
-            for (x = 0; x < length; x++) {
-                i = Math.floor(Math.random() * 62);
-                pass += chars.charAt(i);
-            }
-            return pass;
-        }
 
         var password = randomPassword(25);
 
@@ -169,7 +182,7 @@ const _validate = async (req, res, next) => {
     }
 }
 
-const _login = async (req, res) => {
+const _login = async (req, res, next) => {
     try {
         req.checkBody("username", "Invalid username").notEmpty();
         req.checkBody("password", "Invalid password").notEmpty();
@@ -189,12 +202,174 @@ const _login = async (req, res) => {
 
         res.status(200).json(genToken(user));
 
+        next();
+
     } catch (err) {
         res.status(401).json({ "message": "Invalid credentials", "errors": err });
+        next();
+    }
+}
+
+const _recoverPassword = async (req, res, next) => {
+    try {
+        if (req.body.username) {
+
+            req.checkBody("username", "Username invalid").notEmpty().withMessage("Username can't be empty").isAlphanumeric().withMessage('Username must contain letters and numbers only');
+            const usernameParam = (req.body.username).toLowerCase();
+            const errors = req.validationErrors();
+            if (errors) throw errors;
+
+            User.findOne({ username: usernameParam }, (err, user) => {
+                if (user) {
+                    const token = randomPassword(25);
+                    const password = randomPassword(25);
+                    const url = config.get('apiURL') + "auth/recover/" + token;
+
+                    Valid.findOne({ userId: user._id }, (err, isYet) => {
+                        if (err) console.log("fallo en valid" + err);
+                        else if (isYet) {
+                            console.log("fallo en valid duplicado" + isYet);
+                            var url2 = config.get('apiURL') + "auth/recover/" + isYet.token;
+                            let success = Email.mail("passwordRecover", {
+                                to: user.email,
+                                name: usernameParam,
+                                url: url2,
+                                password: isYet.password
+                            });
+
+                        } else {
+                            const valid = new Valid({
+                                userId: user._id,
+                                email: user.email,
+                                username: usernameParam,
+                                token: token,
+                                password: password,
+                                role: user.role
+                            });
+
+                            valid.save(function (err, validData) {
+                                if (err) {
+                                    console.log("fallo en valid duplicado" + err)
+                                } else {
+                                    let success = Email.mail("passwordRecover", {
+                                        to: user.email,
+                                        name: usernameParam,
+                                        url: url,
+                                        password: password
+                                    });
+                                }
+                            });
+                        }
+                    });
+
+                }
+            });
+
+        } else if (req.body.email) {
+
+            req.checkBody("email", "No email input").notEmpty().withMessage("Email can't be empty").isEmail().withMessage("Must be a valid email");
+            const emailParam = (req.body.email).toLowerCase();
+            const errors = req.validationErrors();
+            if (errors) throw errors;
+
+            User.findOne({ email: emailParam }, (err, user) => {
+                if (user) {
+                    const token = randomPassword(25);
+                    const password = randomPassword(25);
+                    const url = config.get('apiURL') + "auth/recover/" + token;
+
+                    Valid.findOne({ userId: user._id }, (err, isYet) => {
+                        if (err) console.log("fallo en valid" + err);
+                        else if (isYet) {
+                            var url2 = config.get('apiURL') + "auth/recover/" + isYet.token;
+                            console.log("fallo en valid duplicado" + isYet);
+                            let success = Email.mail("passwordRecover", {
+                                to: emailParam,
+                                name: user.username,
+                                url: url,
+                                password: isYet.password
+                            });
+
+                        } else {
+                            const valid = new Valid({
+                                userId: user._id,
+                                email: emailParam,
+                                username: user.username,
+                                token: token,
+                                password: password,
+                                role: user.role
+                            });
+
+                            valid.save(function (err, validData) {
+                                if (err) {
+
+
+                                    console.log("fallo en valid duplicado" + err)
+                                } else {
+                                    let success = Email.mail("passwordRecover", {
+                                        to: emailParam,
+                                        name: user.username,
+                                        url: url,
+                                        password: password
+                                    });
+                                }
+                            });
+                        }
+                    });
+                }
+            });
+
+        } else {
+            throw "Fill with email or username";
+        }
+
+        res.status(200).json({ "message": "An email have been sent to your address" });
+        next();
+
+    } catch (err) {
+        res.status(401).json({ "message": "Invalid credentials", "errors": err });
+        next();
+    }
+
+
+}
+
+const _validateRecoverPassword = async (req, res, next) => {
+    try {
+        req.checkParams("token", "Token not valid").notEmpty().withMessage("Token can't be empty").isAlphanumeric().withMessage('Token not valid');
+        let errors = req.validationErrors();
+        if (errors) throw errors;
+
+        Valid.findOneAndRemove({ token: req.params.token }).exec(function (err, doc) {
+            if (err) {
+                res.status(401).json({ message: err });
+                return (next);
+            } else if (doc) {
+                User.updateUser(doc.userId, { password: doc.password }, (err, user) => {
+                    if (err) {
+                        res.status(401).json({ success: false, msg: 'Error on function', err });
+                        next();
+                    } else {
+                        res.status(200).json({ success: true, msg: 'User correctly updated', user });
+                        next();
+                    }
+                });
+            } else {
+                res.status(401).json({ message: "Not valid code provided" });
+                return (next);
+            }
+        });
+
+    } catch (err) {
+        res.status(401).json({ message: err });
+        return (next);
     }
 }
 
 module.exports.authenticate = _authenticate;
+module.exports.isAuthenticated = _isAuthenticated;
 module.exports.register = _register;
 module.exports.validate = _validate;
 module.exports.login = _login;
+module.exports.recoverPassword = _recoverPassword;
+module.exports.validateRecoverPassword = _validateRecoverPassword;

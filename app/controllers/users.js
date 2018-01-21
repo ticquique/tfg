@@ -218,26 +218,24 @@ const _deleteUser = function (req, res, next) {
     }
 }
 
-const _listUsers = function (callback) {
-    let result = null;
-    const users = userModel.getAllUsers((err, users) => {
-        if (err) {
-            result = { success: false, msg: 'Failed in method listUsers' };
-        } else {
-            result = { success: true, msg: 'Correctly listed all users', users };
-        }
-        callback(result);
-    });
-}
-
-
-
-
-const _listUsersFR = function (req, res, callback) {
-    console.log(req.user);
-    _listUsers((result) => {
-        res.json(result);
-    })
+const _listUsers = function (req, res, next) {
+    if (req.user.privileges == "admin") {
+        userModel.find({}, function (err, users) {
+            if (err) {
+                res.status(401).json({ success: false, msg: 'Failed to list users' + err });
+                next();
+            } else if (users.length > 0) {
+                res.status(200).json({ success: true, msg: 'User', users });
+                next();
+            } else {
+                res.status(401).json({ success: false, msg: 'No users to list' });
+                next();
+            }
+        });
+    } else {
+        res.status(401).json({ success: false, msg: 'No users to list' });
+        next();
+    }
 }
 
 
@@ -247,4 +245,3 @@ module.exports.updateUser = _updateUser;
 module.exports.updateProfile = _updateProfile;
 module.exports.deleteUser = _deleteUser;
 module.exports.listUsers = _listUsers;
-module.exports.listUsersFR = _listUsersFR;

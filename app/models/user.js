@@ -35,7 +35,7 @@ const UserSchema = mongoose.Schema({
   },
   privileges: {
     type: String,
-    enum: ['Member', 'Client', 'Owner', 'Admin'],
+    enum: ['Member', 'Client', 'Owner', 'admin'],
     default: 'Member'
   },
   profile: {
@@ -52,6 +52,10 @@ const UserSchema = mongoose.Schema({
     firstreg: { type: Number, default: 10, required: false },
     numComments: { type: Number, default: 0, required: false },
     numLikes: { type: Number, default: 0, required: false }
+  },
+  langKey: {
+    type: String,
+    default: 'en'
   }
 }, { timestamps: { createdAt: "created_at", updatedAt: "updated_at" } });
 
@@ -90,18 +94,4 @@ const _updateUser = function (id, query, callback) {
   }
 }
 
-
-const _getAllUsers = function (callback) {
-  return User.find({}, callback);
-}
-
-const _comparePassword = function (candidatePassword, hash, callback) {
-  bcrypt.compare(candidatePassword, hash, (err, isMatch) => {
-    if (err) throw err;
-    callback(null, isMatch);
-  });
-}
-
-module.exports.comparePassword = _comparePassword;
-module.exports.getAllUsers = _getAllUsers;
 module.exports.updateUser = _updateUser;

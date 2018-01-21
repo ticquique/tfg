@@ -13,6 +13,11 @@ const ValidSchema = mongoose.Schema({
     password: {
         type: String, required: true
     },
+    userId: {
+        type: Schema.Types.ObjectId  ,
+        required: true, 
+        ref: 'User'
+    },
     role: {
         type: Schema.Types.ObjectId, required: true, ref: 'Role'
     },
