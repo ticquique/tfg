@@ -11,15 +11,15 @@ const _authenticate = expressJwt({
     secret: config.get('JWT_SECRET'),
 });
 
-const _isAuthenticated = async (req, res, next) => {
+const _isAuthenticated = async(req, res, next) => {
     try {
         var decoded = jwt.verify(req.headers.authorization.substr(7), config.get('JWT_SECRET'));
-        if(decoded) {
-            res.status(200).json({success: true, message: "Valid token"});
+        if (decoded) {
+            res.status(200).json({ success: true, message: "Valid token" });
             next()
         } else throw err;
     } catch (err) {
-        res.status(401).json({success: false, message: "Invalid token", err: err});
+        res.status(401).json({ success: false, message: "Invalid token", err: err });
         next()
     }
 }
@@ -41,9 +41,9 @@ const genToken = (user) => {
         id: user._id,
         privileges: user.privileges
     }, config.get('JWT_SECRET'), {
-            expiresIn: expires,
-            subject: String(user._id)
-        });
+        expiresIn: expires,
+        subject: String(user._id)
+    });
 
     return {
         token: token,
@@ -51,7 +51,7 @@ const genToken = (user) => {
     };
 }
 
-const _register = async (req, res, next) => {
+const _register = async(req, res, next) => {
     try {
 
         req.checkBody("username", "Username invalid").notEmpty().withMessage("Username can't be empty").isAlphanumeric().withMessage('Username must contain letters and numbers only');
@@ -81,13 +81,13 @@ const _register = async (req, res, next) => {
 
         Valid.find({
             $or: [{ email: emailParam }, { username: usernameParam }]
-        }).limit(1).exec(function (err, docs) {
-            if (docs.length == 0) {
+        }).limit(1).exec(function(err, docs) {
+            if (docs.length === 0) {
                 User.find({
                     $or: [{ email: emailParam }, { username: usernameParam }]
-                }).limit(1).exec(function (err, docs2) {
-                    if (docs2.length == 0) {
-                        valid.save(function (err, validData) {
+                }).limit(1).exec(function(err, docs2) {
+                    if (docs2.length === 0) {
+                        valid.save(function(err, validData) {
                             if (err) {
                                 throw new Error(err);
                             } else if (validData) {
@@ -140,13 +140,13 @@ const _register = async (req, res, next) => {
     }
 }
 
-const _validate = async (req, res, next) => {
+const _validate = async(req, res, next) => {
     try {
         req.checkParams("token", "Token not valid").notEmpty().withMessage("Token can't be empty").isAlphanumeric().withMessage('Token not valid');
         let errors = req.validationErrors();
         if (errors) throw errors;
 
-        Valid.findOneAndRemove({ token: req.params.token }).exec(function (err, doc) {
+        Valid.findOneAndRemove({ token: req.params.token }).exec(function(err, doc) {
             if (err) {
                 res.status(401).json({ message: err });
                 return (next);
@@ -157,7 +157,7 @@ const _validate = async (req, res, next) => {
                     password: doc.password,
                     role: doc.role
                 });
-                user.save(function (err) {
+                user.save(function(err) {
                     if (err) {
                         res.status(401).json({ message: err });
                         return (next);
@@ -182,7 +182,7 @@ const _validate = async (req, res, next) => {
     }
 }
 
-const _login = async (req, res, next) => {
+const _login = async(req, res, next) => {
     try {
         req.checkBody("username", "Invalid username").notEmpty();
         req.checkBody("password", "Invalid password").notEmpty();
@@ -210,7 +210,7 @@ const _login = async (req, res, next) => {
     }
 }
 
-const _recoverPassword = async (req, res, next) => {
+const _recoverPassword = async(req, res, next) => {
     try {
         if (req.body.username) {
 
@@ -247,7 +247,7 @@ const _recoverPassword = async (req, res, next) => {
                                 role: user.role
                             });
 
-                            valid.save(function (err, validData) {
+                            valid.save(function(err, validData) {
                                 if (err) {
                                     console.log("fallo en valid duplicado" + err)
                                 } else {
@@ -300,7 +300,7 @@ const _recoverPassword = async (req, res, next) => {
                                 role: user.role
                             });
 
-                            valid.save(function (err, validData) {
+                            valid.save(function(err, validData) {
                                 if (err) {
 
 
@@ -334,13 +334,13 @@ const _recoverPassword = async (req, res, next) => {
 
 }
 
-const _validateRecoverPassword = async (req, res, next) => {
+const _validateRecoverPassword = async(req, res, next) => {
     try {
         req.checkParams("token", "Token not valid").notEmpty().withMessage("Token can't be empty").isAlphanumeric().withMessage('Token not valid');
         let errors = req.validationErrors();
         if (errors) throw errors;
 
-        Valid.findOneAndRemove({ token: req.params.token }).exec(function (err, doc) {
+        Valid.findOneAndRemove({ token: req.params.token }).exec(function(err, doc) {
             if (err) {
                 res.status(401).json({ message: err });
                 return (next);
