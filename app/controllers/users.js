@@ -1,7 +1,6 @@
 
 var userModel = require('../models/user');
 var Valid = require('../models/valid');
-var roleModel = require('../models/role');
 
 
 const validateEmail = function (email) {
@@ -219,7 +218,8 @@ const _deleteUser = function (req, res, next) {
 }
 
 const _listUsers = function (req, res, next) {
-    if (req.user.privileges == "admin") {
+    console.log(req);
+    if (req.user && req.user.privileges == "admin") {
         userModel.find({}, function (err, users) {
             if (err) {
                 res.status(401).json({ success: false, msg: 'Failed to list users' + err });

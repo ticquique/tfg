@@ -1,121 +1,158 @@
-var roleModel = require('../models/role');
+var roleModel = require('../models/role'),
+User = require('../models/user');
 
-const _getRole = function (id, callback) {
-    let result = null;
-    const role = roleModel.getRoleById(id, (err, role) => {
-        if (err) {
-            result = { success: false, msg: 'Role not found' }
+const _getRole = function (req, res, next) {
+    try {
+        req.checkParams("roleId", "roleId invalid").notEmpty().withMessage("roleId can't be empty").isAlphanumeric().withMessage('roleId must contain letters and numbers only');
+        let errors = req.validationErrors();
+        if (errors) throw errors;
+
+        if (req.user && req.user.privileges == "admin") {
+            const role = roleModel.findById(req.params.roleId, (err, role) => {
+                if (err) {
+                    res.status(401).json({ message: 'Error on function' });
+                    next();
+                } else if (role) {
+                    res.status(200).json({ message: 'Role found' });
+                    next();
+                } else {
+                    res.status(401).json({ message: 'Role not found' });
+                    next();
+                }
+            });
         } else {
-            result = { success: true, msg: 'Role found', role }
+            res.status(401).json({ message: "Invalid credentials" });
+            next();
         }
-        callback(result);
-    });
-}
-
-const _newRole = function (name, callback) {
-    let result = null; 
-    let newRole = new roleModel({
-        name: name,
-    });
-    roleModel.addRole(newRole, (err, role) => {
-        if (err) {
-            result = { success: false, msg: 'Failed to register role' + err };
-        } else {
-            result = { success: true, msg: 'Role registered' };
-        }
-        callback(result);
-    });
-}
-
-const _updateRole = function(id, query, callback) {
-    roleModel.updateRole(id, query, (err, role) => {
-        if (err) {
-            result = { success: false, msg: 'Failed to update role' + err };
-        } else {
-            result = { success: true, msg: 'Role correctly updated' };
-        }
-        callback(result);
-    });
-}
-
-const _deleteRole = function(id, callback) {
-    let result = null;
-    roleModel.deleteRole(id, (err, role) => {
-        if (err) {
-            result = { success: false, msg: 'Failed to delete role' + err };
-        } else {
-            result = { success: true, msg: 'Role correctly deleted' };
-        }
-        callback(result);
-    });
-}
-
-const _getAllRoles = function(callback) {
-    const roles = roleModel.getAllRoles((err, roles) => {
-        if (err) {
-            result = { success: false, msg: 'Failed in method listRoles' };
-        } else {
-           result = { success: true, msg: 'Correctly listed all roles', roles };
-        }
-        callback(result);
-    });
-}
-
-
-//FUNCTIONS TO ROUTES
-
-const _getRoleFR = function (req, res, callback) {
-    _getRole(req.params.roleId, (role) => {
-        res.json(role);
-    });
-}
-const _newRoleFR = function (req, res, callback) {
-
-    let wrongInputs = false;
-    if (Object.keys(req.body).length > 1 || !req.body.hasOwnProperty('name') || req.body.name == "" || req.body.name == null) {
-        wrongInputs = true;
+    } catch (err) {
+        res.status(401).json({ "message": "Invalid request", "errors": err });
+        next();
     }
-    if (wrongInputs) res.json({ success: false, msg: 'Failed to register role' });
-    else {
-        _newRole(req.body.name, (role) => {
-            res.json(role);
+
+}
+
+const _newRole = function (req, res, next) {
+    
+    console.log(req);
+    try {
+        req.checkBody("name", "name invalid").notEmpty().withMessage("name can't be empty").isAlphanumeric().withMessage('name must contain letters and numbers only');
+        const nameParam = (req.body.name).toLowerCase();
+        let errors = req.validationErrors();
+        if (errors) throw errors;
+        
+        console.log(req.user);
+        if (req.user && req.user.privileges == "admin") {
+            const newRole = new roleModel({
+                name: nameParam
+            });
+
+            newRole.save(function (err) {
+                if (err) {
+                    res.status(401).json({ message: 'Error on function' });
+                    next();
+                } else {
+                    res.status(200).json({ message: 'Role correctly created', newRole });
+                    next();
+                }
+            });
+
+        } else {
+            res.status(401).json({ message: "Invalid credentials" });
+            next();
+        }
+
+    } catch (err) {
+        res.status(401).json({ "message": "Invalid request", "errors": err });
+        next();
+    }
+}
+
+const _updateRole = function (req, res, next) {
+    try {
+        req.checkParams("roleId", "roleId invalid").notEmpty().withMessage("roleId can't be empty").isAlphanumeric().withMessage('roleId must contain letters and numbers only');
+        req.checkBody("name", "name invalid").notEmpty().withMessage("name can't be empty").isAlphanumeric().withMessage('name must contain letters and numbers only');
+        const nameParam = (req.body.name).toLowerCase();
+        let errors = req.validationErrors();
+        if (errors) throw errors;
+
+        if (req.user && req.user.privileges == "admin") {
+
+            const query = { name: nameParam }
+            roleModel.findByIdAndUpdate(req.params.roleId, { $set: query }, (err, role) => {
+                if (err) {
+                    res.status(401).json({ message: 'Error on function', err });
+                    next();
+                } else {
+                    res.status(200).json({ message: 'Role correctly updated', role });
+                    next();
+                }
+            });
+
+        } else {
+            res.status(401).json({ message: "Invalid credentials" });
+            next();
+        }
+
+    } catch (err) {
+        res.status(401).json({ "message": "Invalid request", "errors": err });
+        next();
+    }
+}
+
+const _deleteRole = function (req, res, next) {
+    try {
+        req.checkParams("roleId", "roleId invalid").notEmpty().withMessage("roleId can't be empty").isAlphanumeric().withMessage('roleId must contain letters and numbers only');
+        let errors = req.validationErrors();
+        if (errors) throw errors;
+
+        if (req.user && req.user.privileges == "admin") {
+            roleModel.findByIdAndRemove({ _id: req.params.roleId }, function (err, role) {
+                if (err) {
+                    res.status(401).json({ message: 'Error on function', err });
+                    next();
+                } else if (role) {
+                    res.status(200).json({ message: 'Role correctly deleted' });
+                    next();
+                } else {
+                    res.status(401).json({ message: 'Role not found' });
+                    next();
+                }
+            });
+        } else {
+            res.status(401).json({ message: 'Role not found' });
+            next();
+        }
+
+    } catch (err) {
+        res.status(401).json({ message: "Invalid request" });
+        next();
+    }
+}
+
+const _getAllRoles = function (req, res, next) {
+    if (req.user && req.user.privileges == "admin") {
+        roleModel.find({}, function (err, roles) {
+            if (err) {
+                res.status(401).json({ message: 'Failed to list roles' + err });
+                next();
+            } else if (roles.length > 0) {
+                res.status(200).json({ message: 'Roles', roles });
+                next();
+            } else {
+                res.status(401).json({ message: 'No roles to list' });
+                next();
+            }
         });
+    } else {
+        res.status(401).json({ message: 'No role to list' });
+        next();
     }
-}
-const _updateRoleFR = function (req, res, callback) {
-    const updates = req.body;
-    let wrongInputs = false;
-    Object.keys(updates).map(function (key, index) {
-        if (key != "name") wrongInputs = true;
-        else if (key == "name" && (updates.name == null || updates.name == "")) wrongInputs = true;
-    });
-    if (wrongInputs) res.json({ success: false, msg: 'Failed to update role' });
-    else {
-        _updateRole(req.params.roleId, updates, (result) => {
-            res.json(result);
-        });
-    }
-}
-const _deleteRoleFR = function (req, res, callback) {
-    _deleteRole(req.params.roleId, (result) => {
-        res.json(result);
-    })
 }
 
 
-const _listRolesFR = function (req, res, callback) {
-    _getAllRoles((result)=>{
-        res.json(result);
-    })
-}
 
 module.exports.getRole = _getRole;
-module.exports.getRoleFR = _getRoleFR;
 module.exports.newRole = _newRole;
-module.exports.newRoleFR = _newRoleFR;
 module.exports.updateRole = _updateRole;
-module.exports.updateRoleFR = _updateRoleFR;
 module.exports.deleteRole = _deleteRole;
-module.exports.deleteRoleFR = _deleteRoleFR;
-module.exports.listRoles = _getAllRoles;
-module.exports.listRolesFR = _listRolesFR;
+module.exports.getAllRoles = _getAllRoles;
