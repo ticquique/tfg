@@ -1,5 +1,5 @@
 var roleModel = require('../models/role'),
-User = require('../models/user');
+    User = require('../models/user');
 
 const _getRole = function (req, res, next) {
     try {
@@ -13,7 +13,7 @@ const _getRole = function (req, res, next) {
                     res.status(401).json({ message: 'Error on function' });
                     next();
                 } else if (role) {
-                    res.status(200).json({ message: 'Role found' });
+                    res.status(200).json({ message: 'Role found', role });
                     next();
                 } else {
                     res.status(401).json({ message: 'Role not found' });
@@ -32,15 +32,13 @@ const _getRole = function (req, res, next) {
 }
 
 const _newRole = function (req, res, next) {
-    
-    console.log(req);
+
     try {
         req.checkBody("name", "name invalid").notEmpty().withMessage("name can't be empty").isAlphanumeric().withMessage('name must contain letters and numbers only');
         const nameParam = (req.body.name).toLowerCase();
         let errors = req.validationErrors();
         if (errors) throw errors;
-        
-        console.log(req.user);
+
         if (req.user && req.user.privileges == "admin") {
             const newRole = new roleModel({
                 name: nameParam
@@ -130,23 +128,18 @@ const _deleteRole = function (req, res, next) {
 }
 
 const _getAllRoles = function (req, res, next) {
-    if (req.user && req.user.privileges == "admin") {
-        roleModel.find({}, function (err, roles) {
-            if (err) {
-                res.status(401).json({ message: 'Failed to list roles' + err });
-                next();
-            } else if (roles.length > 0) {
-                res.status(200).json({ message: 'Roles', roles });
-                next();
-            } else {
-                res.status(401).json({ message: 'No roles to list' });
-                next();
-            }
-        });
-    } else {
-        res.status(401).json({ message: 'No role to list' });
-        next();
-    }
+    roleModel.find({}, function (err, roles) {
+        if (err) {
+            res.status(401).json({ message: 'Failed to list roles' + err });
+            next();
+        } else if (roles.length > 0) {
+            res.status(200).json({ message: 'Roles', roles });
+            next();
+        } else {
+            res.status(401).json({ message: 'No roles to list' });
+            next();
+        }
+    });
 }
 
 

@@ -64,7 +64,9 @@ var start = function (cb) {
 
     app.all('*', (req, res, next) => {
         console.log(req.path);
-        if ( req.url.startsWith('/api/auth') ||  req.url.startsWith('/api/role') ) return next();
+        console.log(req.method);
+        console.log(req.url);
+        if ( req.url.startsWith('/api/auth') ||  (req.url === ('/api/role') && req.method === ('GET'))  ) return next();
         else {auth.authenticate(req, res, next);}
 
     });
