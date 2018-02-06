@@ -68,7 +68,7 @@ const _register = async(req, res, next) => {
 
         var token = randomPassword(25);
 
-        const url = config.get('apiURL') + "auth/" + token;
+        const url = config.get('aplicationURL') + "passwordchange/" + token + '?type=n';
 
         const valid = new Valid({
             email: emailParam,
@@ -223,7 +223,7 @@ const _recoverPassword = async(req, res, next) => {
                 if (user) {
                     const token = randomPassword(25);
                     const password = randomPassword(25);
-                    const url = config.get('apiURL') + "auth/recover/" + token;
+                    const url = config.get('aplicationURL') + "passwordchange/" + token + '?type=r';
 
                     Valid.findOne({ userId: user._id }, (err, isYet) => {
                         if (err) console.log("fallo en valid" + err);
@@ -347,10 +347,10 @@ const _validateRecoverPassword = async(req, res, next) => {
             } else if (doc) {
                 User.updateUser(doc.userId, { password: doc.password }, (err, user) => {
                     if (err) {
-                        res.status(401).json({ success: false, msg: 'Error on function', err });
+                        res.status(401).json({ message: 'Error on function' });
                         next();
                     } else {
-                        res.status(200).json({ success: true, msg: 'User correctly updated', user });
+                        res.status(200).json(genToken(user));
                         next();
                     }
                 });
