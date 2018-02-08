@@ -20,17 +20,21 @@ var cookieParser = require('cookie-parser');
 var https = require('https');
 var cors = require('cors');
 
+var socketEvents = require('../../app/controllers/socket');
 var cronjobs = require('../../scripts/schedule');
 var app;
 
 var start = function (cb) {
     'use strict';
     // Configure express 
+    console.log(config.get('PWD'));
     var options = {
         key: fs.readFileSync(path.join(config.get('PWD'), config.get('NODE_SSL_KEY'))),
-        cert: fs.readFileSync(path.join(config.get('PWD'), config.get('NODE_SSL_CERT')))
+        cert: fs.readFileSync(path.join(config.get('PWD'), config.get('NODE_SSL_CERT'))),
+        passphrase: '100918671a'
     };
 
+    console.log(config.get('PWD'));
     var auth = require("../../app/controllers/auth");
     var corsOptions = {
         origin: function (origin, callback) {
@@ -42,6 +46,7 @@ var start = function (cb) {
         }
     }
     app = express();
+    console.log(config.get('PWD'));
 
     app.use(cors(corsOptions));
     app.use(favicon(path.join(config.get('PWD'), 'public', 'favicon', 'favicon.ico')))
@@ -66,8 +71,8 @@ var start = function (cb) {
         console.log(req.path);
         console.log(req.method);
         console.log(req.url);
-        if ( req.url.startsWith('/api/auth') ||  (req.url === ('/api/role') && req.method === ('GET'))  ) return next();
-        else {auth.authenticate(req, res, next);}
+        if (req.url.startsWith('/api/auth') || (req.url === ('/api/role') && req.method === ('GET'))) return next();
+        else { auth.authenticate(req, res, next); }
 
     });
     require('../../app/routes/index')(app);
@@ -84,9 +89,16 @@ var start = function (cb) {
         next(err);
     });
 
-    https.createServer(options, app).listen(config.get('NODE_PORT'), function(){
+    const server = https.createServer(options, app);
+    
+    const io = require('socket.io')(server);
+    socketEvents(io);
+
+    server.listen(config.get('NODE_PORT'), function () {
         cronjobs();
     });
+
+    
     logger.info('[SERVER] Listening on port ' + config.get('NODE_PORT'));
 
     if (cb) {

@@ -13,7 +13,11 @@ const MessageSchema = new Schema({
     author: {
         type: Schema.Types.ObjectId,
         ref: 'User'
-    }
+    },
+    toOpen: {
+        type: [Schema.Types.ObjectId],
+        ref: 'User'
+    } 
 },
     {
         timestamps: true // Saves createdAt and updatedAt as dates. createdAt will be our timestamp.
