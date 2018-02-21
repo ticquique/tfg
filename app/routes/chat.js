@@ -12,6 +12,7 @@ module.exports = function (router) {
         .post(chatController.sendReply);
 
     router.route('/new/:recipient')
-        .post(chatController.newConversation);
+        .post(chatController.newConversation)
+        .get(chatController.newConversation);
 
 };

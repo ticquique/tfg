@@ -218,28 +218,61 @@ const _deleteUser = function (req, res, next) {
 }
 
 const _listUsers = function (req, res, next) {
-    console.log(req);
     if (req.user && req.user.privileges == "admin") {
         userModel.find({}, function (err, users) {
             if (err) {
-                res.status(401).json({ success: false, msg: 'Failed to list users' + err });
+                res.status(401).json({ message: err });
                 next();
             } else if (users.length > 0) {
-                res.status(200).json({ success: true, msg: 'User', users });
+                res.status(200).json({ users });
                 next();
             } else {
-                res.status(401).json({ success: false, msg: 'No users to list' });
+                res.status(401).json({ message: 'No users to list' });
                 next();
             }
         });
     } else {
-        res.status(401).json({ success: false, msg: 'No users to list' });
+        res.status(401).json({ message: 'No users to list' });
         next();
     }
 }
 
 
+const _getUsersByPartial = function (req, res, next) {
+    try {
+        req.checkBody("username", "No username input").notEmpty().withMessage("Username can't be empty").isAlphanumeric().withMessage('Username must contain only letters and numbers ');
+        if (req.user) {
+            var regexp = new RegExp("^" + req.body.username);
+            userModel.find({
+                "username": regexp
+            })
+            .select('-password')
+            .exec(function (err, users) {
+                if (err) {
+                    res.status(401).json({ message: err });
+                    next();
+                } else if (users.length > 0) {
+                    res.status(200).json( users );
+                    next();
+                } else {
+                    res.status(200).json([]);
+                    next();
+                }
+            });
+        } else {
+            res.status(200).json([]);
+            next();
+        }
+    } catch (err) {
+        res.status(200).json([]);
+        next();
+    }
+
+}
+
+
 module.exports.getUser = _getUser;
+module.exports.getUsersByPartial = _getUsersByPartial;
 module.exports.newUser = _newUser;
 module.exports.updateUser = _updateUser;
 module.exports.updateProfile = _updateProfile;

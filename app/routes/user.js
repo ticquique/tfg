@@ -14,5 +14,8 @@ module.exports = function (router) {
         .get(userController.listUsers)
         .post(userController.newUser);
 
+    router.route('/partial/')
+        .post(userController.getUsersByPartial);
+
 
 };

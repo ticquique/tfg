@@ -44,7 +44,7 @@ const _upload = (req, res, next) => {
             res.status(401).json({ message: err });
         } else {
             const attachment = new Attachment({
-                url: req.file.path,
+                url: config.get('URL') + 'uploads/' + req.user.username + '/' +  req.file.filename,
                 type: "Image"
             });
             attachment.save(function (err) {
@@ -64,7 +64,7 @@ const _upload = (req, res, next) => {
                             fs.writeFile(path.join(pathUser, req.file.filename), buffer, function (e) {
                                 if (e) res.status(401).json({ message: e });
                                 else {
-                                    res.status(200).json({ message: "done" });
+                                    res.status(200).json({ message: "done", url: config.get('URL') + 'uploads/' + req.user.username + '/' +  req.file.filename });
                                 }
                             });
                         })

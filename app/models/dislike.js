@@ -12,6 +12,11 @@ const DislikeSchema = mongoose.Schema({
         type: Schema.Types.ObjectId, required: false, rel: 'User' ,
         required: false,
         index: true
+    },
+    relatedUp: {
+        type: Boolean,
+        required: false,
+        default: true
     }
 }, { timestamps: { createdAt: "created_at", updatedAt: "updated_at" }}  );
 
